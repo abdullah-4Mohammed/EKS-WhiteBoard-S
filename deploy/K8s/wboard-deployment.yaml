@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wboard-deployment
+  labels:
+    app: wboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wboard
+  template:
+    metadata:
+      labels:
+        app: wboard
+    spec:
+      containers:
+      - name: wboard
+        image: <>
+        ports:
+        - containerPort: 9666
+        volumeMounts:
+        - name: storage-volume
+          mountPath: /app/storage
+        - name: database-volume
+          mountPath: /app/database
+      volumes:
+      - name: storage-volume
+        hostPath:
+          path: /path/to/your/storage
+      - name: database-volume
+        hostPath:
+          path: /path/to/your/database
