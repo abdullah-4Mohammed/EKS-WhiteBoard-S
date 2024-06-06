@@ -1,0 +1,31 @@
+steps:
+
+- task: AWSCLI@1
+  displayName: 'Debug: print assumed role ARN'
+  inputs:
+    awsCredentials: '$(awsConnection)'
+    regionName: '$(region)'
+    awsCommand: 'sts'
+    awsSubCommand: 'get-caller-identity'
+
+- task: AWSCLI@1
+  displayName: Create a bucket for backend 
+  inputs:
+    awsCredentials: '$(awsConnection)'
+    regionName: '$(region)'
+    awsCommand: 's3api'
+    awsSubCommand: 'create-bucket'
+    awsArguments: >-
+      --bucket "$(serviceName)-$(backendBucketName)-$(regionShortName)" 
+      --region $(region)
+#      --create-bucket-configuration "{\"LocationConstraint\":\"$(region)\"}"
+# the --create-bucket-configuration cant be in us-east-1 but it nessary if you are using other region
+
+# - task: AWSCLI@1
+#   displayName: Create an ECR
+#   inputs:
+#     awsCredentials: '$(awsConnection)'
+#     regionName: 'eu-west-2'
+#     awsCommand: 'ecr'
+#     awsSubCommand: 'create-repository'
+#     awsArguments: '--repository-name $(ecrName)'

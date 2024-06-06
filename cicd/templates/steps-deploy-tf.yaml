@@ -1,0 +1,74 @@
+steps:
+- task: JasonBJohnson.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@1
+  displayName: "Install Terraform"
+  inputs:
+    terraformVersion: '1.7.5' #'1.6.0'
+
+- task: replacetokens@6 
+  inputs:
+    root: '$(System.DefaultWorkingDirectory)/deploy/terraform' 
+    sources : '**/*.tfvars' 
+    addBOM: true 
+    tokenPattern: 'doubleunderscores'
+    logLevel: 'warn'
+    ifNoFilesFound: 'warn' 
+    telemetryOptout: true 
+
+- task: TerraformCLI@2 
+  displayName: "Terraform init"
+  inputs:
+    backendType: 'aws'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/deploy/terraform'
+    backendServiceAws: $(awsConnection)
+    backendAwsRegion: $(region)
+    backendAwsBucket: '$(backendBucket)'
+    backendAwsKey: 'tf/$(environment).tfstate'
+    allowTelemetryCollection: true
+
+- task: TerraformCLI@2 
+  displayName: 'Terraform plan'
+  inputs:
+    command: 'plan'
+    providerServiceAws: $(awsConnection)
+    workingDirectory: '$(System.DefaultWorkingDirectory)/deploy/terraform'
+    commandOptions: '-var-file=vars.tfvars --out=$(environment).tfplan'
+    publishPlanResults: 'plan'
+    providerAwsRegion: $(region)
+    allowTelemetryCollection: true
+
+- task: TerraformCLI@2 #charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-cli.TerraformCLI@0
+  displayName: 'Terraform apply'
+  inputs:
+    command: 'apply'
+    providerServiceAws: $(awsConnection)
+    workingDirectory: '$(System.DefaultWorkingDirectory)/deploy/terraform'
+    commandOptions: '-auto-approve $(environment).tfplan'
+    allowTelemetryCollection: true
+    providerAwsRegion: $(region)
+
+
+
+# - task: TerraformTaskV3@0
+#   displayName: "Terraform plan"
+#   inputs:
+#     provider: 'aws' 
+#     command: 'plan'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/deploy/terraform'
+#     commandOptions: '-var-file=vars.tfvars --out=$(environment).tfplan'
+#     environmentServiceNameAWS: "AzDo-AwL-aws" #'$(awsConnection)' #"AzDo-AwL-Training" #'$(awsConnection)'
+#     backendAWSBucketName: '$(backendBucket)'
+#     backendAWSKey: 'tf/$(environment).tfstate'
+#     allowTelemetryCollection: true
+
+# - task: TerraformTaskV3@0
+#   displayName: "Terraform apply"
+#   inputs:
+#     provider: 'aws'
+#     command: 'apply'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/deploy/terraform'
+#     commandOptions: '-auto-approve $(environment).tfplan'
+#     environmentServiceNameAWS: "AzDo-AwL-aws" #'$(awsConnection)'
+#     backendAWSBucketName: '$(backendBucket)'
+#     backendAWSKey: 'tf/$(environment).tfstate'
+#     allowTelemetryCollection: true

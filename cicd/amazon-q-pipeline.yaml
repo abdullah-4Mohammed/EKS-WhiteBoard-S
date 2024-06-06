@@ -1,0 +1,28 @@
+name: $(SourceBranchName)-$(Date:yyyyMmdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - cicd/templates/steps-deploy-amazon-q.yaml
+    - cicd/amazon-q-pipeline.yaml
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+resources:
+- repo: self
+
+variables:
+ - template: variables/vars-global.yaml
+stages:
+  - stage: Deploy_amazon_q
+    displayName: Deploy Amazon Q
+    jobs:
+      - job: Deploy_amazon_q
+        displayName: Deploy Amazon Q
+        # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))     
+        steps:
+        - template: templates/steps-deploy-amazon-q.yaml

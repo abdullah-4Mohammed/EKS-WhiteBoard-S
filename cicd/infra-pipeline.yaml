@@ -1,0 +1,41 @@
+name: $(SourceBranchName)-$(Date:yyyyMmdd)$(Rev:.r)
+#go
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - cicd/templates/steps-deploy-terraform.yaml
+    - deploy
+    - src
+
+pool: 
+  vmImage: 'ubuntu-latest'
+
+resources:
+- repo: self
+
+variables:
+- template: variables/vars-global.yaml
+
+parameters:
+- name: environments
+  type: object
+  default: ['nonprod']
+# - name: namespaces
+#   type: object
+#   default: ['dev']
+
+stages:
+- ${{ each env in parameters.environments }}:
+  - stage: Deploy_${{ env }}
+    displayName: Deploy ${{ env }}
+    jobs:
+    - job: Deploy_Terraform
+      displayName: Deploy terraform infrastructure
+      #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+      variables:
+      - template: variables/vars-${{ env }}.yaml
+      steps:
+      - template: templates/steps-deploy-tf.yaml

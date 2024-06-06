@@ -1,0 +1,28 @@
+name: $(SourceBranchName)-$(Date:yyyyMmdd)$(Rev:.r)
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - cicd/templates/steps-deploy-shared.yaml
+    - cicd/shared-pipeline.yaml
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+resources:
+- repo: self
+
+variables:
+ - template: variables/vars-global.yaml
+stages:
+  - stage: Deploy_shared
+    displayName: Deploy shared resources
+    jobs:
+      - job:
+        displayName: Deploy shared resources
+        # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))     
+        steps:
+        - template: templates/steps-deploy-shared.yaml

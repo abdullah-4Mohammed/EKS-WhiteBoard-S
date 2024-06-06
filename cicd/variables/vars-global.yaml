@@ -1,0 +1,10 @@
+variables:
+  region: 'us-east-1'
+  awsConnection: "AzToAWS"
+  backendBucketName: "backend-tfstate"
+  backendBucket: "amazon-q-chatbot-backend-tfstate-use1"
+  regionShortName: use1
+  serviceName: amazon-q-chatbot
+  identityCenterInstanceARN: "arn:aws:sso:::instance/ssoins-7223f28fcc5e5709"
+  amazon-q-roleARN: "arn:aws:iam::767397720274:role/service-role/QBusiness-Application-h9k5u"
+  amazon-q-applicationId: "fc74491a-7399-406c-95fe-ee3ecb9f73cd"

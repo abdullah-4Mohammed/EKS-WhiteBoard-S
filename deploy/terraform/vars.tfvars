@@ -1,0 +1,5 @@
+environment = "__environment__"
+regionShortName = "__regionShortName__"
+serviceShortName = "__serviceShortName__"
+region = "__region__"
+backendBucket = "__backendBucket__"

@@ -1,0 +1,61 @@
+steps:
+
+# - task: AWSCLI@1
+#   displayName: 'Create Amazon Q Application'
+#   inputs:
+#     awsCredentials: '$(awsConnection)'
+#     regionName: '$(region)'
+#     awsCommand: 'qbusiness'
+#     awsSubCommand: 'create-application'
+#     awsArguments: >-
+#       --display-name "$(serviceName)"
+#       --identity-center-instance-arn "$(identityCenterInstanceARN)"
+#       --role-arn "$(amazon-q-roleARN)"
+#       --description "Amazon Q Chatbot"
+# #      --encryption-configuration "kmsKeyId=auto-kendra-1"
+# #      --attachments-configuration "attachmentsControlMode=ENABLED"
+
+# add web experience
+ 
+# - task: AWSCLI@1
+#   displayName: 'Create Web Experience'
+#   inputs:
+#     awsCredentials: '$(awsConnection)'
+#     regionName: '$(region)'
+#     awsCommand: 'qbusiness'
+#     awsSubCommand: 'create-web-experience'
+#     awsArguments: >-
+#       --application-id "$(amazon-q-applicationId)"
+#       --title "Test Chatbot aws Q - Title"
+#       --subtitle "Test subtitle"
+#       --welcome-message "Hello, how can I help you today? - this is the welcome message"
+#       --sample-prompts-control-mode "DISABLED"
+#       --role-arn "$(amazon-q-roleARN)"
+
+- task: AWSCLI@1
+  displayName: 'List Web Experiences'
+  inputs:
+    awsCredentials: '$(awsConnection)'
+    regionName: '$(region)'
+    awsCommand: 'qbusiness'
+    awsSubCommand: 'get-web-experience'
+    awsArguments: >-
+      --application-id "$(amazon-q-applicationId)"
+      --max-results 10
+
+
+# - task: AWSCLI@1
+#   displayName: 'Update Web Experience'
+#   inputs:
+#     awsCredentials: '$(awsConnection)'
+#     regionName: '$(region)'
+#     awsCommand: 'qbusiness'
+#     awsSubCommand: 'update-web-experience'
+#     awsArguments: >-
+#       --application-id "$(amazon-q-applicationId)"
+#       --web-experience-id "<your-web-experience-id>"
+#       --role-arn "<role-arn>"
+#       --title "Updated Web Experience Title"
+#       --subtitle "Updated subtitle of your web experience"
+#       --welcome-message "Updated welcome message for your web experience"
+#       --sample-prompts-control-mode "DISABLED" 
