@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: wboard
-        image: <>
+        image: <your-docker-image>
         ports:
         - containerPort: 9666
         volumeMounts:
@@ -26,8 +26,8 @@ spec:
           mountPath: /app/database
       volumes:
       - name: storage-volume
-        hostPath:
-          path: /path/to/your/storage
+        persistentVolumeClaim:
+          claimName: storage-pvc
       - name: database-volume
-        hostPath:
-          path: /path/to/your/database
+        persistentVolumeClaim:
+          claimName: database-pvc
