@@ -47,7 +47,7 @@ steps:
     allowTelemetryCollection: true
     providerAwsRegion: $(region)
 
-
+ 
 
 # - task: TerraformTaskV3@0
 #   displayName: "Terraform plan"
