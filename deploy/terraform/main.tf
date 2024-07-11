@@ -30,7 +30,7 @@ module "eks" {
   cluster_name = "wboard-eks"
   cluster_version = "1.14"
   #subnets = ["subnet-0b1b1c6b1b1c6b1b1", "subnet-0b1b1c6b1b1c6b1b2", "subnet-0b1b1c6b1b1c6b1b3"]
-  vpc_id = "vpc-0b1b1c6b1b1c6b1b1"
+  vpc_id = module.vpc.vpc_id
   node_groups = {
     eks_nodes = {
       desired_capacity = 2
