@@ -29,15 +29,38 @@ module "eks" {
   source = "terraform-aws-modules/eks/aws"
   cluster_name = "wboard-eks"
   cluster_version = "1.14"
-  #subnets = ["subnet-0b1b1c6b1b1c6b1b1", "subnet-0b1b1c6b1b1c6b1b2", "subnet-0b1b1c6b1b1c6b1b3"]
-  vpc_id = module.vpc.vpc_id
-  node_groups = {
-    eks_nodes = {
-      desired_capacity = 2
-      max_capacity = 3
-      min_capacity = 1
-      instance_type = "t2.micro"
-      key_name = "wboard"
+  cluster_endpoint_public_access = true
+  cluster_addons = {
+    coredns = {
+      most_recent = true
     }
+    kube-proxy = {
+      most_recent = true
+    }
+    vpc-cni = {
+      most_recent = true
+    }
+  }
+  
+  vpc_id                   = module.vpc.vpc_id
+  subnet_ids               = module.vpc.private_subnets
+  control_plane_subnet_ids = module.vpc.intra_subnets
+
+  eks_managed_node_group_defaults = {
+    ami_type       = "AL2_x86_64"
+    instance_types = ["t2.micro"]
+    attach_cluster_primary_security_group = true
+  }
+  eks_managed_node_groups = {
+    eks_node_group = {
+      min_size     = 1
+      max_size     = 2
+      desired_size = 1
+      capacity_type  = "SPOT"
+     }
+  }
+
+  tags = {
+    Environment = "test"
   }
 }
