@@ -64,9 +64,9 @@ module "eks" {
   }
   eks_managed_node_groups = {
     eks_node_group = {
-      min_size     = 2
+      min_size     = 1
       max_size     = 8
-      desired_size = 4
+      desired_size = 2
       capacity_type  = "SPOT"
     }
   }
